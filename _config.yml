@@ -1,0 +1,9 @@
+---
+name: Leaflet.photomarker
+description: Leaflet.photomarker examples
+pygments: true
+permalink: pretty
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - Rakefile
