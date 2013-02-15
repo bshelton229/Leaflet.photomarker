@@ -3,6 +3,7 @@ name: Leaflet.photomarker
 description: Leaflet.photomarker examples
 pygments: true
 permalink: pretty
+baseurl: /Leaflet.photomarker
 exclude:
   - Gemfile
   - Gemfile.lock
