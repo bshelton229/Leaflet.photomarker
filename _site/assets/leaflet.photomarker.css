@@ -1,8 +1,0 @@
-.leaflet-photolayer-img {
-  border: solid white 2px;
-  background-color: white;
-  -webkit-transition:width 0.15s ease, height 0.15s ease;
-  -moz-transition:width 0.15s ease, height 0.15s ease;
-  -o-transition:width 0.15s ease, height 0.15s ease;
-  transition:width 0.15s ease, height 0.15s ease;
-}
