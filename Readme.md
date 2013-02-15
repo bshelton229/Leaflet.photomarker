@@ -4,6 +4,8 @@ Leaflet.PhotoMarker
 L.PhotoMarker is a [Leaflet](http://leafletjs.com) image marker. It takes src and size options,
 and displays the image as the marker icon.
 
+[Example pulling from the Flickr API](http://bshelton229.github.com/Leaflet.photomarker/)
+
 *Requires Leaflet 0.5.0 or newer*
 
 ## Adding a photo marker
