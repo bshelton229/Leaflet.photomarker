@@ -1,0 +1,34 @@
+{
+  "name": "leaflet.photomarker",
+  "version": "0.1.0",
+  "description": "Leaflet PhotoLayer",
+  "main": "index.js",
+  "build": {
+    "js": [
+      "src/PhotoIcon.js",
+      "src/PhotoMarker.js"
+    ]
+  },
+  "directories": {
+    "example": "examples"
+  },
+  "devDependencies": {
+    "grunt": "0.4.0rc8",
+    "grunt-contrib-watch": "0.2.0rc7",
+    "grunt-contrib-concat": "0.1.2rc6",
+    "grunt-contrib-jshint": "0.1.1rc6",
+    "grunt-contrib-nodeunit": "0.1.2rc6",
+    "grunt-contrib-uglify": "0.1.1rc6",
+    "testacular": "latest",
+    "jasmine-node": "latest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@bitbucket.org/uwmadison_ucomm/leaflet.photolayer.git"
+  },
+  "keywords": [
+    "leaflet"
+  ],
+  "author": "Bryan Shelton",
+  "license": "BSD"
+}

@@ -1,0 +1,70 @@
+<html>
+<head>
+  <title>Leaflet Example</title>
+  <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="../lib/leaflet/leaflet.css">
+  <link rel="stylesheet" type="text/css" href="../dist/leaflet.photomarker.css">
+  <script src="../lib/leaflet/leaflet.js"></script>
+  <script src="../src/PhotoIcon.js"></script>
+  <script src="../src/PhotoMarker.js"></script>
+</head>
+<body>
+  <h2>Leaflet.PhotoLayer x<span id="zoom"></span></h2>
+  <div id="map" style="height: 700px;width:750"></div>
+  <p>Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png"></p>
+  <script type="text/javascript">
+    var photos = [{"src":"http://farm8.staticflickr.com/7012/6477800239_ee93da89b9_t.jpg","size":["100","67"],"latLng":[43.077685,-89.398192],"medium":"http://farm8.staticflickr.com/7012/6477800239_ee93da89b9.jpg","medium_size":["500","333"],"title":"Sailing #bt15 http://t.co/doDRj0Ov"},{"src":"http://farm8.staticflickr.com/7144/6477799993_11b3e06173_t.jpg","size":["100","67"],"latLng":[43.076881,-89.40029],"medium":"http://farm8.staticflickr.com/7144/6477799993_11b3e06173.jpg","medium_size":["500","333"],"title":"Rathskeller #bt15 http://t.co/61M6gxOc"},{"src":"http://farm9.staticflickr.com/8216/8414102061_b1f5fbf73f_t.jpg","size":["100","75"],"latLng":[43.074562,-89.397709],"medium":"http://farm9.staticflickr.com/8216/8414102061_b1f5fbf73f.jpg","medium_size":["500","375"],"title":"IMG_2093"},{"src":"http://farm8.staticflickr.com/7006/6477799713_e78766d45e_t.jpg","size":["100","67"],"latLng":[43.073762,-89.398648],"medium":"http://farm8.staticflickr.com/7006/6477799713_e78766d45e.jpg","medium_size":["500","333"],"title":"Outside chazen #bt15 http://t.co/W1hClWsr"},{"src":"http://farm8.staticflickr.com/7026/6477799459_0275eca886_t.jpg","size":["100","67"],"latLng":[43.077152,-89.398541],"medium":"http://farm8.staticflickr.com/7026/6477799459_0275eca886.jpg","medium_size":["500","333"],"title":"Crew #bt15 http://t.co/Xiz0NC20"},{"src":"http://farm8.staticflickr.com/7008/6477799165_a298b4a17d_t.jpg","size":["100","67"],"latLng":[43.076744,-89.399115],"medium":"http://farm8.staticflickr.com/7008/6477799165_a298b4a17d.jpg","medium_size":["500","333"],"title":"The terrace #bt15 http://t.co/qVipDgNv"},{"src":"http://farm9.staticflickr.com/8084/8416067654_962821a476_t.jpg","size":["100","67"],"latLng":[43.074985,-89.401009],"medium":"http://farm9.staticflickr.com/8084/8416067654_962821a476.jpg","medium_size":["500","335"],"title":"BascHall_Hill_autumn06_3453"},{"src":"http://farm9.staticflickr.com/8353/8417310704_252e14e6aa_t.jpg","size":["100","67"],"latLng":[43.077116,-89.404184],"medium":"http://farm9.staticflickr.com/8353/8417310704_252e14e6aa.jpg","medium_size":["500","335"],"title":"Muir_Woods_snow07_6129"},{"src":"http://farm9.staticflickr.com/8052/8417317702_532159caa6_t.jpg","size":["100","67"],"latLng":[43.089865,-89.41523],"medium":"http://farm9.staticflickr.com/8052/8417317702_532159caa6.jpg","medium_size":["500","333"],"title":"aerial_UW_50mm11_2002"},{"src":"http://farm9.staticflickr.com/8353/8422025862_668968ee5f_t.jpg","size":["100","75"],"latLng":[43.089203,-89.439788],"medium":"http://farm9.staticflickr.com/8353/8422025862_668968ee5f.jpg","medium_size":["500","374"],"title":"IMG_0030"},{"src":"http://farm9.staticflickr.com/8194/8422103080_9b6459384e_t.jpg","size":["100","75"],"latLng":[43.089246,-89.44004],"medium":"http://farm9.staticflickr.com/8194/8422103080_9b6459384e.jpg","medium_size":["500","374"],"title":""}];
+
+    // Init the map
+    map = L.map('map').setView([43.077085534225475, -89.40519332885742], 16);
+
+    $.getJSON('https://api.instagram.com/v1/media/search?callback=?', {
+      lat: 43.077085534225475,
+      lng: -89.40519332885742,
+      distance: 5000,
+      client_id: '20551ec88e004323b352b320119aa442'
+    }, function(data) {
+      console.log(data);
+    });
+
+    // Zoom stuff
+    $("#zoom").html(map.getZoom());
+    map.on('zoomend', function(e) {
+      $("#zoom").html(map.getZoom());
+    });
+
+    // Mapquest open layer
+    L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; OpenStreetMap contributors',
+        maxZoom: 18,
+        minZoom: 13
+    }).addTo(map);
+
+    var markers = [];
+    $.each(photos, function(k, photo) {
+      var marker = L.photoMarker(photo.latLng, {
+        src: photo.src,
+        size: photo.size,
+        resize: function(e) {
+          var marker = e.target,
+              zoom = e.map.getZoom();
+          if ( zoom <= 14 ) {
+            marker.scale(0.125)
+          }
+          else if ( zoom <= 15 ) {
+            marker.scale(0.5);
+          }
+          else {
+            marker.scale(1);
+          }
+        }
+      }).bindPopup('<img src="'+photo.medium+'" /><p>'+photo.title+'</p>', {
+        minWidth: photo.medium_size[0],
+        minHeight: photo.medium_size[1]
+      });
+      markers.push(marker);
+    });
+    L.featureGroup(markers).addTo(map);
+  </script>
+</body>
+</html>

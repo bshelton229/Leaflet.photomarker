@@ -1,0 +1,93 @@
+<html>
+<head>
+  <title>Leaflet Example</title>
+  <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="../lib/leaflet/leaflet.css">
+  <link rel="stylesheet" type="text/css" href="../dist/leaflet.photomarker.css">
+  <script src="../lib/leaflet/leaflet.js"></script>
+  <script src="../src/PhotoIcon.js"></script>
+  <script src="../src/PhotoMarker.js"></script>
+</head>
+<body>
+  <h2>Leaflet.PhotoLayer x<span id="zoom"></span><span id="loading"> loading...</span></h2>
+  <div id="map" style="height: 650px;width:750"></div>
+  <p>Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png"></p>
+  <script type="text/javascript">
+    // Init the map
+    map = L.map('map').setView([43.077085534225475, -89.40519332885742], 13);
+
+    // Zoom stuff
+    $("#zoom").html(map.getZoom());
+    map.on('zoomend', function(e) {
+      $("#zoom").html(map.getZoom());
+    });
+
+    // Mapquest open layer
+    L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; OpenStreetMap contributors',
+        maxZoom: 18,
+        minZoom: 13
+    }).addTo(map);
+
+    $.getJSON('https://api.instagram.com/v1/media/search?callback=?', {
+      lat: 43.077085534225475,
+      lng: -89.40519332885742,
+      distance: 5000,
+      client_id: '20551ec88e004323b352b320119aa442'
+    }, function(resp) {
+      $("#loading").hide();
+      var markers = [];
+      $.each(resp.data, function(k, inst) {
+        var thumbnail = inst.images.thumbnail,
+            full = inst.images.low_resolution;
+
+        // Create the photo marker
+        var marker = L.photoMarker([inst.location.latitude, inst.location.longitude], {
+          src: thumbnail.url,
+          size: [ thumbnail.width, thumbnail.height ]
+        });
+
+        // Build the popup content
+        var container = L.DomUtil.create("div",'instagram-container');
+        var img = L.DomUtil.create('img','instagram-image',container);
+        img.src = full.url;
+        img.width = full.width;
+        img.height = full.height;
+
+        if ( inst.caption && inst.caption.text ) {
+          var caption = L.DomUtil.create('p','instagram-caption', container);
+          caption.innerHTML = inst.caption.text;
+        }
+
+        marker.bindPopup(container, {
+          minWidth: full.width
+        });
+
+        marker.on('resize', function(e) {
+          var photo_marker = e.target,
+              zoom = e.zoom;
+
+          // Zoom metric for scaling images
+          if ( zoom <= 13 ) {
+            photo_marker.scale(0.125);
+          }
+          else if ( zoom <= 15 ) {
+            photo_marker.scale(0.25);
+          }
+          else if ( zoom < 17 ) {
+            photo_marker.scale(0.5);
+          }
+          else {
+            photo_marker.scale(1);
+          }
+        });
+
+        markers.push(marker);
+      });
+
+      // Create a feature group of the markers
+      L.featureGroup(markers).addTo(map);
+    });
+  </script>
+</body>
+</html>
