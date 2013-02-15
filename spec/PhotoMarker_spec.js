@@ -7,7 +7,7 @@ describe('L.PhotoMarker', function() {
       src: 'http://farm8.staticflickr.com/7012/6477800239_ee93da89b9_t.jpg',
       size: [100,67]
     }).addTo(map);
-    var img = marker._icon;
+    var img = marker.options.icon.img;
     expect(img.style.width).toEqual('100px');
     expect(img.style.height).toEqual('67px');
     marker.scale(2);

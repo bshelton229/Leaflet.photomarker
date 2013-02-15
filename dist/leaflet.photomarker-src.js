@@ -1,6 +1,6 @@
 L.PhotoIcon = L.Class.extend({
   options: {
-    className: 'leaflet-photolayer-img'
+    className: 'leaflet-photomarker-img'
   },
 
   initialize: function (options) {
@@ -17,18 +17,19 @@ L.PhotoIcon = L.Class.extend({
   },
 
   createIcon: function () {
-    if ( !this.img ) {
-      var src = this.options.src;
+    var src = this.options.src;
 
-      if (!src) {
-        if (name === 'icon') {
-          throw new Error("iconUrl not set in Icon options (see the docs).");
-        }
-        return null;
+    if (!src) {
+      if (name === 'icon') {
+        throw new Error("iconUrl not set in Icon options (see the docs).");
       }
-
-      this.img = this._createImg(src);
+      return null;
     }
+
+    this._container = L.DomUtil.create("div", 'leaflet-photomarker-container');
+    this._container.style.position = 'relative';
+    this.img = this._createImg(src);
+    this._container.appendChild(this.img);
 
     // Add class names
     L.DomUtil.addClass(this.img, 'leaflet-marker-icon');
@@ -37,7 +38,8 @@ L.PhotoIcon = L.Class.extend({
     // Set size styles
     this._setIconSize(this.img, this.size);
 
-    return this.img;
+    // return this.img;
+    return this._container;
   },
 
   resize: function(size) {
