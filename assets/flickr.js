@@ -44,7 +44,7 @@ function display(resp) {
     var photo_markers = new L.MarkerClusterGroup({
       showCoverageOnHover: false,
       spiderfyDistanceMultiplier: 5,
-      maxClusterRadius: 30
+      maxClusterRadius: 5
     }).addTo(map);
 
     $.each(resp.photos.photo, function(k, photo) {
@@ -62,7 +62,22 @@ function display(resp) {
             marker.scale(1);
           }
         }
-      }).bindPopup(popupContent(photo), { minWidth: photo.width_m });
+      });
+
+      // On click open the content in a bootstrap modal
+      photo_marker.on('click', function(e) {
+        var title = photo.title;
+        if ( photo.ownername ) {
+          title += ' ('+photo.ownername+')';
+        }
+        $("#modal .modal-header h3").html(title);
+        $("#modal .modal-body").css('max-height', parseInt(photo.height_m )+ 20);
+        var img = L.DomUtil.create('img', 'modal-image');
+        img.onload = function() { console.log('hello ' + Date.now());}
+        img.src = photo.url_m;
+        $("#modal .modal-body").html(img);
+        $("#modal").modal('show');
+      });
 
       // Pre-load the image, then add it to the photo layer
       var img = L.DomUtil.create('img');
