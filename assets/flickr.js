@@ -3,7 +3,7 @@ var map = L.map('map').setView([43.077085534225475, -89.40519332885742], 13);
 var WaitingControl = L.Control.extend({
   onAdd: function(map) {
     var c = L.DomUtil.create('div', 'leaflet-control-attribution');
-    c.innerHTML = '<h3>Loading Flickr Images ...</h3>';
+    c.innerHTML = '<h3>Getting images from flickr...</h3>';
     c.style.width = '600px';
     c.style.height = '50px';
     this._container = c;
@@ -39,12 +39,13 @@ function display(resp) {
   map.removeControl(waiting_control);
   if ( resp.photos && resp.photos.photo ) {
     $("#loading").hide();
+
     // Marker Cluster group
     var photo_markers = new L.MarkerClusterGroup({
       showCoverageOnHover: false,
       spiderfyDistanceMultiplier: 5,
-      maxClusterRadius: 50
-    });
+      maxClusterRadius: 30
+    }).addTo(map);
 
     $.each(resp.photos.photo, function(k, photo) {
       // Create a photo marker
@@ -62,9 +63,12 @@ function display(resp) {
           }
         }
       }).bindPopup(popupContent(photo), { minWidth: photo.width_m });
-      photo_markers.addLayer(photo_marker);
+
+      // Pre-load the image, then add it to the photo layer
+      var img = L.DomUtil.create('img');
+      img.onload = function() { photo_markers.addLayer(photo_marker); };
+      img.src = photo.url_t;
     });
-    map.addLayer(photo_markers);
   }
 }
 
@@ -73,7 +77,8 @@ $.getJSON('http://api.flickr.com/services/rest/?jsoncallback=?', {
   method: 'flickr.photos.search',
   api_key: 'c375f1e26e8b14300d2945a0fd6c4e8e',
   bbox: '-89.44210052490234,43.0527084803254,-89.36056137084961,43.09847605187662',
-  min_taken_date: Date.now() - ( 24 * 60 * 60 * 60 ),
+  min_taken_date: Math.round((new Date()).getTime() / 1000) - ( 14 * 24 * 60 * 60 ),
+  per_page: 50,
   extras: 'description,license,owner_name,geo,o_dims,media,path_alias,url_sq,url_t,url_s,url_q,url_m,url_n,url_z,url_c,url_l,url_o',
   format: 'json'
 }, display);
