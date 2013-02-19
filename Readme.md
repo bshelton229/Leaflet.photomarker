@@ -20,8 +20,9 @@ var photo_marker = new L.PhotoMarker([43.077085534225475, -89.40519332885742], {
 ## Scaling the photo at different zoom levels
 
 The photo marker has a scale() method and fires a resize event when the map is zoomed,
-allowing you to manually change the scale at different zoom levels. A default algorithm
-may be implemented in the near future.
+allowing you to manually change the scale at different zoom levels.
+
+**TODO: Think about an automatic algorithm for handling the size per zoom level.**
 
 ```javascript
 var photo_marker = new L.PhotoMarker([43.077085534225475, -89.40519332885742], {
