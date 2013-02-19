@@ -44,7 +44,7 @@ function display(resp) {
     var photo_markers = new L.MarkerClusterGroup({
       showCoverageOnHover: false,
       spiderfyDistanceMultiplier: 5,
-      maxClusterRadius: 5
+      maxClusterRadius: 10
     }).addTo(map);
 
     $.each(resp.photos.photo, function(k, photo) {
