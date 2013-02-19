@@ -44,7 +44,9 @@
         // Create the photo marker
         var marker = L.photoMarker([inst.location.latitude, inst.location.longitude], {
           src: thumbnail.url,
-          size: [ thumbnail.width, thumbnail.height ]
+          size: [ thumbnail.width, thumbnail.height ],
+          smallestSizeZoom: 13,
+          largestSizeZoom: 18
         });
 
         // Build the popup content
@@ -61,25 +63,6 @@
 
         marker.bindPopup(container, {
           minWidth: full.width
-        });
-
-        marker.on('resize', function(e) {
-          var photo_marker = e.target,
-              zoom = e.zoom;
-
-          // Zoom metric for scaling images
-          if ( zoom <= 13 ) {
-            photo_marker.scale(0.125);
-          }
-          else if ( zoom <= 15 ) {
-            photo_marker.scale(0.25);
-          }
-          else if ( zoom < 17 ) {
-            photo_marker.scale(0.5);
-          }
-          else {
-            photo_marker.scale(1);
-          }
         });
 
         markers.push(marker);

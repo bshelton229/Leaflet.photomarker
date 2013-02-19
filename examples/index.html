@@ -28,7 +28,7 @@
     L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
         attribution: 'Map data &copy; OpenStreetMap contributors',
         maxZoom: 18,
-        minZoom: 13
+        minZoom: 6
     }).addTo(map);
 
     // var markers = [];
@@ -37,27 +37,14 @@
     $.each(photos, function(k, photo) {
       var marker = L.photoMarker(photo.latLng, {
         src: photo.src,
-        size: photo.size,
-        resize: function(e) {
-          var marker = e.target,
-              zoom = e.map.getZoom();
-          if ( zoom <= 14 ) {
-            marker.scale(0.125)
-          }
-          else if ( zoom <= 15 ) {
-            marker.scale(0.5);
-          }
-          else {
-            marker.scale(1);
-          }
-        }
+        size: photo.size
       }).bindPopup('<img src="'+photo.medium+'" /><p>'+photo.title+'</p>', {
         minWidth: photo.medium_size[0],
         minHeight: photo.medium_size[1]
       });
+      // Preload the images
       $("<img>").attr("src", photo.src).load(function() { photo_layer.addLayer(marker); });
     });
-    // L.featureGroup(markers).addTo(map);
   </script>
 </body>
 </html>
