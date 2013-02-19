@@ -44,7 +44,7 @@ function display(resp) {
     var photo_markers = new L.MarkerClusterGroup({
       showCoverageOnHover: false,
       spiderfyDistanceMultiplier: 5,
-      maxClusterRadius: 10
+      maxClusterRadius: 30
     }).addTo(map);
 
     $.each(resp.photos.photo, function(k, photo) {
@@ -52,16 +52,8 @@ function display(resp) {
       var photo_marker = L.photoMarker([photo.latitude, photo.longitude], {
         src: photo.url_t,
         size: [ photo.width_t, photo.height_t ],
-        resize: function(e) {
-          var zoom = e.zoom,
-              marker = e.target;
-          if ( zoom <= 15 ) {
-            marker.scale(0.25);
-          }
-          else {
-            marker.scale(1);
-          }
-        }
+        largestSizeZoom: 16,
+        smallestSizeZoom: 13
       });
 
       // On click open the content in a bootstrap modal
