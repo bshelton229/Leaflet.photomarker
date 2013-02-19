@@ -37,6 +37,7 @@
       api_key: 'c375f1e26e8b14300d2945a0fd6c4e8e',
       bbox: '-89.44210052490234,43.0527084803254,-89.36056137084961,43.09847605187662',
       min_taken_date: Date.now() - ( 24 * 60 * 60 * 60 ),
+      per_page: 50,
       extras: 'description, license, date_upload, date_taken, owner_name, icon_server, original_format, last_update, geo, tags, machine_tags, o_dims, views, media, path_alias, url_sq,url_t, url_s, url_q, url_m, url_n, url_z, url_c, url_l, url_o',
       format: 'json'
     }, display);
@@ -50,7 +51,7 @@
           showCoverageOnHover: false,
           spiderfyDistanceMultiplier: 5,
           maxClusterRadius: 50
-        });
+        }).addTo(map);
 
         $.each(resp.photos.photo, function(k, photo) {
           // Create a photo marker
@@ -68,9 +69,10 @@
               }
             }
           });
-          photo_markers.addLayer(photo_marker);
+          var image = L.DomUtil.create('img');
+          image.onload = function() { photo_markers.addLayer(photo_marker); };
+          image.src = photo.url_t;
         });
-        map.addLayer(photo_markers);
       }
     }
   </script>

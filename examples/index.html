@@ -18,15 +18,6 @@
     // Init the map
     map = L.map('map').setView([43.077085534225475, -89.40519332885742], 16);
 
-    $.getJSON('https://api.instagram.com/v1/media/search?callback=?', {
-      lat: 43.077085534225475,
-      lng: -89.40519332885742,
-      distance: 5000,
-      client_id: '20551ec88e004323b352b320119aa442'
-    }, function(data) {
-      console.log(data);
-    });
-
     // Zoom stuff
     $("#zoom").html(map.getZoom());
     map.on('zoomend', function(e) {
@@ -40,7 +31,9 @@
         minZoom: 13
     }).addTo(map);
 
-    var markers = [];
+    // var markers = [];
+    var photo_layer = L.layerGroup();
+    photo_layer.addTo(map);
     $.each(photos, function(k, photo) {
       var marker = L.photoMarker(photo.latLng, {
         src: photo.src,
@@ -62,9 +55,9 @@
         minWidth: photo.medium_size[0],
         minHeight: photo.medium_size[1]
       });
-      markers.push(marker);
+      $("<img>").attr("src", photo.src).load(function() { photo_layer.addLayer(marker); });
     });
-    L.featureGroup(markers).addTo(map);
+    // L.featureGroup(markers).addTo(map);
   </script>
 </body>
 </html>
