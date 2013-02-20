@@ -16,7 +16,7 @@ var waiting_control = new WaitingControl().addTo(map);
 L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; OpenStreetMap contributors',
     maxZoom: 18,
-    minZoom: 13
+    minZoom: 10
 }).addTo(map);
 
 function popupContent(photo) {
@@ -51,9 +51,7 @@ function display(resp) {
       // Create a photo marker
       var photo_marker = L.photoMarker([photo.latitude, photo.longitude], {
         src: photo.url_t,
-        size: [ photo.width_t, photo.height_t ],
-        largestSizeZoom: 16,
-        smallestSizeZoom: 13
+        size: [ photo.width_t, photo.height_t ]
       });
 
       // On click open the content in a bootstrap modal
