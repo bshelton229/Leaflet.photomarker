@@ -1,21 +1,17 @@
 L.PhotoMarker = L.Marker.extend({
   options: {
     title: '',
-    smallestSizeZoom: 11,
-    fullSizeZoom: 16,
-    scaleTo: 0.25,
     clickable: true,
     draggable: false,
     zIndexOffset: 0,
     opacity: 1,
     riseOnHover: true,
-    riseOffset: 250
+    riseOffset: 250,
+    // Default zoom matrix
+    matrix: { 11: 0.125, 12: 0.25, 14: 0.5, 16: 1 }
   },
   initialize: function(latlng, options) {
     options.icon = new L.PhotoIcon({src:options.src,size:options.size});
-    // if ( typeof(options.resize) === 'function' ) {
-    //   this.on('resize', options.resize);
-    // }
     L.Marker.prototype.initialize.call(this, latlng, options);
   },
   _initIcon: function() {
@@ -43,24 +39,11 @@ L.PhotoMarker = L.Marker.extend({
     }
   },
   _resize: function(map) {
-    var marker = this,
-        zoom = map.getZoom(),
-        min = this.options.smallestSizeZoom,
-        max = this.options.fullSizeZoom,
-        scaleTo = this.options.scaleTo,
-        level = max - zoom,
-        levels = max - min;
-
-    if ( zoom >= max ) {
-      marker.scale(1);
+    // Only instantiate the matrix here if we're not overriden
+    if ( this.matrix === undefined ) {
+      this.matrix = new L.PhotoMarkerMatrix(this.options.matrix);
     }
-    else if ( zoom < min ) {
-      marker.scale(scaleTo);
-    }
-    else {
-      var scale = 1 - ( ( 1 - scaleTo ) / levels * level );
-      marker.scale(scale);
-    }
+    this.scale( this.matrix.findScale(map.getZoom()) );
   }
 });
 

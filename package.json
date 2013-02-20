@@ -5,6 +5,7 @@
   "main": "index.js",
   "build": {
     "js": [
+      "src/PhotoMarkerMatrix.js",
       "src/PhotoIcon.js",
       "src/PhotoMarker.js"
     ]
