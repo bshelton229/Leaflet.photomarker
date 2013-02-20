@@ -63,7 +63,6 @@ function display(resp) {
         $("#modal .modal-header h3").html(title);
         $("#modal .modal-body").css('max-height', parseInt(photo.height_m )+ 20);
         var img = L.DomUtil.create('img', 'modal-image');
-        img.onload = function() { console.log('hello ' + Date.now());}
         img.src = photo.url_m;
         $("#modal .modal-body").html(img);
         $("#modal").modal('show');
