@@ -8,6 +8,7 @@
   <link rel="stylesheet" type="text/css" href="../dist/leaflet.photomarker.css">
   <script src="../lib/leaflet/leaflet.js"></script>
   <script src="../lib/markercluster/leaflet.markercluster-src.js"></script>
+  <script src="../src/PhotoMarkerMatrix.js"></script>
   <script src="../src/PhotoIcon.js"></script>
   <script src="../src/PhotoMarker.js"></script>
 </head>
@@ -17,7 +18,7 @@
   <p>Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png"></p>
   <script type="text/javascript">
     // Init the map
-    map = L.map('map').setView([43.077085534225475, -89.40519332885742], 13);
+    map = L.map('map').setView([43.077085534225475, -89.40519332885742], 11);
 
     // Zoom stuff
     $("#zoom").html(map.getZoom());
@@ -29,13 +30,13 @@
     L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
         attribution: 'Map data &copy; OpenStreetMap contributors',
         maxZoom: 18,
-        minZoom: 13
+        minZoom: 11
     }).addTo(map);
 
     $.getJSON('http://api.flickr.com/services/rest/?jsoncallback=?', {
       method: 'flickr.photos.search',
       api_key: 'c375f1e26e8b14300d2945a0fd6c4e8e',
-      bbox: '-89.44210052490234,43.0527084803254,-89.36056137084961,43.09847605187662',
+      bbox: '-89.6037,42.9642,-89.1663,43.1799',
       min_taken_date: Date.now() - ( 24 * 60 * 60 * 60 ),
       per_page: 50,
       extras: 'description, license, date_upload, date_taken, owner_name, icon_server, original_format, last_update, geo, tags, machine_tags, o_dims, views, media, path_alias, url_sq,url_t, url_s, url_q, url_m, url_n, url_z, url_c, url_l, url_o',
@@ -50,24 +51,14 @@
         var photo_markers = new L.MarkerClusterGroup({
           showCoverageOnHover: false,
           spiderfyDistanceMultiplier: 5,
-          maxClusterRadius: 50
+          maxClusterRadius: 10
         }).addTo(map);
 
         $.each(resp.photos.photo, function(k, photo) {
           // Create a photo marker
           var photo_marker = L.photoMarker([photo.latitude, photo.longitude], {
             src: photo.url_t,
-            size: [ photo.width_t, photo.height_t ],
-            resize: function(e) {
-              var zoom = e.zoom,
-                  marker = e.target;
-              if ( zoom <= 15 ) {
-                marker.scale(0.25);
-              }
-              else {
-                marker.scale(1);
-              }
-            }
+            size: [ photo.width_t, photo.height_t ]
           });
           var image = L.DomUtil.create('img');
           image.onload = function() { photo_markers.addLayer(photo_marker); };
