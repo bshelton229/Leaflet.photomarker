@@ -44,7 +44,7 @@ function display(resp) {
     var photo_markers = new L.MarkerClusterGroup({
       showCoverageOnHover: false,
       spiderfyDistanceMultiplier: 5,
-      maxClusterRadius: 30
+      maxClusterRadius: 25
     }).addTo(map);
 
     $.each(resp.photos.photo, function(k, photo) {
@@ -80,7 +80,7 @@ function display(resp) {
 $.getJSON('http://api.flickr.com/services/rest/?jsoncallback=?', {
   method: 'flickr.photos.search',
   api_key: 'c375f1e26e8b14300d2945a0fd6c4e8e',
-  bbox: '-89.44210052490234,43.0527084803254,-89.36056137084961,43.09847605187662',
+  bbox: '-89.6037,42.9642,-89.1663,43.1799',
   min_taken_date: Math.round((new Date()).getTime() / 1000) - ( 14 * 24 * 60 * 60 ),
   per_page: 50,
   extras: 'description,license,owner_name,geo,o_dims,media,path_alias,url_sq,url_t,url_s,url_q,url_m,url_n,url_z,url_c,url_l,url_o',
